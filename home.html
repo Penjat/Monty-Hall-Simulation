@@ -10,21 +10,26 @@
 <h1>The Monty Hall Simulation</h1>
 <div id="container">
   <div id="playSpcae">
+    <h2>Play Game</h2>
     <button type="button" class="door" onclick="openDoor(0,this)">1</button>
     <button type="button" class="door" onclick="openDoor(1,this)">2</button>
     <button type="button" class="door" onclick="openDoor(2,this)">3</button>
-  <h3>choose a door</h3>
+  <p>choose a door</p>
 
   </div>
 
   <div id="simControls">
-    <h3>simulate</h3>
-    <button type="button" class="" onclick="RunSimulation(0,this)">Run Simulation</button>
+    <h3>Run Simulation</h3>
+    <button type="button" class="" onclick="RunSimulation(1)">1 time</button>
+    <button type="button" class="" onclick="RunSimulation(5)">5 times</button>
+    <button type="button" class="" onclick="RunSimulation(20)">20 times</button>
+    <button type="button" class="" onclick="RunSimulation(100)">100 times</button>
+    <button type="button" class="" onclick="RunSimulation(1000)">1000 times</button>
   </div>
 
   <div id="stats">
-    <h3>stats</h3>
-<p>No data to display.  Run some imulations to collect some data
+    <h3>Statistics</h3>
+<p>No data to display.  Run some simulations to collect some data.
   </div>
 <div>
 </body>

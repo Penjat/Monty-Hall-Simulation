@@ -3,12 +3,18 @@ var doors;//an array to hold the door values
 var firstChoiceCounter = 0;//number of times the first choice was right
 var secondChoiceCounter = 0;//number of times the second choice was right
 var numberOfInstancesCounter = 0;//total number of simulations run
-
-function RunSimulation(){
+function ResetData(){
+  firstChoiceCounter = 0;
+  secondChoiceCounter = 0;
+  numberOfInstancesCounter = 0;
+  var statBox = '<h3>stats</h3><p>No data to display.  Run some simulations to collect some data.';
+  document.getElementById("stats").innerHTML = statBox;
+}
+function RunSimulation(numToRun){
   console.log("running simulation...");
   doors = new Array();
 
-  for(var i=0;i<100;i++){
+  for(var i=0;i<numToRun;i++){
     RunInstance(doors);
   }
   //calculate the percent
@@ -16,7 +22,7 @@ function RunSimulation(){
   var percentFirstChoice = Math.floor((firstChoiceCounter/numberOfInstancesCounter)*1000)/10;
   var percentSecondChoice = Math.floor((secondChoiceCounter/numberOfInstancesCounter)*1000)/10;
 
-  var statBox = '<h3>stats</h3><div id="statbar1">Stay with first door</div><div id="statbar2">Change door</div><div id="readOut"></div>';
+  var statBox = '<h3>Statistics</h3><div id="statbar1">Stay with first door</div><div id="statbar2">Change door</div><div id="readOut"></div><button type="button" class="" onclick="ResetData()">reset all data</button>';
   document.getElementById("stats").innerHTML = statBox;
 
   document.getElementById("statbar1").style.width = ""+percentFirstChoice +"%";
@@ -32,13 +38,13 @@ function getReadout(percentFirstChoice,percentSecondChoice){
   var readout = "<p>After " + numberOfInstancesCounter + " simulations. "
   readout += "<p>The first door the player chose was correct " + firstChoiceCounter + " times, or " + percentFirstChoice +"% of the time."
   readout += "<p>The second choice the player was offered was correct " + secondChoiceCounter + " times, or " + percentSecondChoice +"% of the time."
-  readout += "<p>The data suggests that "
+  readout += "<p><b>The data suggests that "
   if(firstChoiceCounter > secondChoiceCounter){
     readout += "the player should have stayed with the first door they chose.";
   }else if(firstChoiceCounter < secondChoiceCounter){
     readout += "the player should have changed doors when given the option.";
   }else{
-    readout += "it doesn't seem to matter what door the player chooses.</p>";
+    readout += "it doesn't seem to matter what door the player chooses.</b></p>";
   }
   return readout;
 }
@@ -98,4 +104,5 @@ function FindSecondOption(playerChoice,doors){
       return i;
     }
   }
+
 }
