@@ -5,55 +5,29 @@ var secondChoiceCounter = 0;//number of times the second choice was right
 var numberOfInstancesCounter = 0;//total number of simulations run
 var gameState = "1stChoice";
 var prizePlace;
+var firstDoorChosen;
 
-function openDoor(playerChoice){
-  if(gameState == "1stChoice"){
-    //place the prize
-    prizePlace = Math.floor(Math.random() *3);
-    var instructions = "Great. You have chosen door number " + (playerChoice+1) +".";
-    var wrongDoor = -1;//set to negative one to signify not yet assigned
-    var secondOption;
-    //TODO make it move in a random direction to avoid predictability
-    for(var i=0;i<3;i++){
-      if(i != playerChoice && i != prizePlace){
-        wrongDoor = i;
-      }
-      //is not player's choice, is not the wrong
-      if(i != playerChoice  && i != wrongDoor ){
-        secondOption = i;
-      }
-    }
+function PlayAgain(){
+  gameState = "1stChoice";
+  var instructions = "behind one of these doors is a prize, behind the other two, nothing."
+  document.getElementById("instructions").innerHTML = instructions;
 
-    instructions += "the host has revealed that the prize was not behind door number " + (wrongDoor+1);
-    instructions += "<p>Now which door will you choose?";
-    console.log("plaerChoice: " + playerChoice + " wrongDoor: " + wrongDoor + " secondOption: + " + secondOption + "prizePlae: " + prizePlace);
-    document.getElementById("instructions").innerHTML = instructions;
-    gameState = "2ndChoice";
-  }else if(gameState == "2ndChoice"){
-    if(playerChoice == prizePlace){
-      console.log("you win!");
-    }else{
-      console.log("sorry, the prize was behind door number "+ prizePlace);
-    }
-  }
 
+  var door0 = document.getElementById("door0");
+  door0.disabled = false;
+  door0.className = "door";
+
+  var door1 = document.getElementById("door1");
+  door1.disabled = false;
+  door1.className = "door";
+
+  var door2 = document.getElementById("door2");
+  door2.disabled = false;
+  door2.className = "door";
+
+  document.getElementById("btmMessage").innerHTML = "<b>choose a door</b>";
 }
-function ResetData(){
-  firstChoiceCounter = 0;
-  secondChoiceCounter = 0;
-  numberOfInstancesCounter = 0;
-  var statBox = '<h3>stats</h3><p>No data to display.  Run some simulations to collect some data.';
-  document.getElementById("stats").innerHTML = statBox;
-}
-function RunSimulation(numToRun){
-  console.log("running simulation...");
-  doors = new Array();
-
-  for(var i=0;i<numToRun;i++){
-    RunInstance(doors);
-  }
-  //calculate the percent
-  //use math.floor so only one decimal place
+function CalculateStats(){
   var percentFirstChoice = Math.floor((firstChoiceCounter/numberOfInstancesCounter)*1000)/10;
   var percentSecondChoice = Math.floor((secondChoiceCounter/numberOfInstancesCounter)*1000)/10;
 
@@ -67,6 +41,83 @@ function RunSimulation(numToRun){
   document.getElementById("statbar2").innerHTML = "<h3>2nd Choice</h3>"+"<h2>"+percentSecondChoice +"%";
 
   document.getElementById("readOut").innerHTML = getReadout(percentFirstChoice,percentSecondChoice);
+}
+function DeactivateWrongDoor(wrongDoor){
+  var door = document.getElementById(("door"+wrongDoor))
+  door.disabled = true;
+  door.className = "emptyDoor";
+}
+function openDoor(playerChoice){
+  if(gameState == "1stChoice"){
+    firstDoorChosen = playerChoice;
+    //place the prize
+    prizePlace = Math.floor(Math.random() *3);
+    var instructions = "Great. You have chosen door number " + (playerChoice+1) +".";
+    var wrongDoor = -1;//set to negative one to signify not yet assigned
+
+    //TODO make it move in a random direction to avoid predictability
+    for(var i=0;i<3;i++){
+      if(i != playerChoice && i != prizePlace){
+        wrongDoor = i;
+      }
+
+    }
+    DeactivateWrongDoor(wrongDoor);
+    instructions += "the host has revealed that the prize was not behind door number " + (wrongDoor+1) +".";
+
+    console.log("plaerChoice: " + playerChoice + " wrongDoor: " + wrongDoor +  " prizePlae: " + prizePlace);
+    document.getElementById("instructions").innerHTML = instructions;
+    gameState = "2ndChoice";
+
+    document.getElementById("btmMessage").innerHTML = "<b>you can keep the same door or change to another</b>" ;
+  }else if(gameState == "2ndChoice"){
+
+    //check if the prize was in the first choice or in the second choice given
+    if(prizePlace == firstDoorChosen){
+      firstChoiceCounter++;
+    }else{
+      secondChoiceCounter++;
+    }
+    numberOfInstancesCounter++;
+    CalculateStats();
+
+    if(playerChoice == prizePlace){
+      console.log("you win!");
+      var instructions = "you win!!!";
+
+      document.getElementById("instructions").innerHTML = instructions;
+    }else{
+      console.log("sorry, the prize was behind door number "+ (prizePlace+1));
+      var instructions = "sorry, the prize was behind door number "+ (prizePlace+1);
+
+      document.getElementById("instructions").innerHTML = instructions;
+    }
+    gameState = "gameOver";
+    //press reset to play again
+    document.getElementById("btmMessage").innerHTML = '<button type="button"   onclick="PlayAgain()">Play Again?</button>' ;
+
+
+  }
+
+}
+function ResetData(){
+  firstChoiceCounter = 0;
+  secondChoiceCounter = 0;
+  numberOfInstancesCounter = 0;
+  var statBox = '<h3>stats</h3><p>No data to display.  Run some simulations to collect some data.';
+  document.getElementById("stats").innerHTML = statBox;
+}
+
+function RunSimulation(numToRun){
+  console.log("running simulation...");
+  doors = new Array();
+
+  for(var i=0;i<numToRun;i++){
+    RunInstance(doors);
+  }
+  //calculate the percent
+  //use math.floor so only one decimal place
+  CalculateStats();
 }
 function getReadout(percentFirstChoice,percentSecondChoice){
   //analyizes the data and returns text based on that

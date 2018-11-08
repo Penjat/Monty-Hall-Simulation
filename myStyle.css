@@ -1,23 +1,38 @@
 #container{
   text-align: center;
   border-style: solid;
-    border-width: 10px;
+    border-width: 0px;
     border-color: yellow;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+
     margin: 140px;
 
 }
-#simControls,#stats{
-  border-style: dashed;
-    border-width: 10px 0px 0px 0px;
+#simControls,#stats,#playSpace{
+  border-style: solid;
+    border-width: 10px;
     padding: 20px;
-    border-color: grey;
+    margin: 10px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    border-color: yellow;
+}
+#playSpace{
+  height: 400px;
 }
 .door{
   width: 80px;
   height: 140px;
   border-radius: 10px;
   margin: 30px;
+}
+.emptyDoor{
+  width: 80px;
+  height: 140px;
+  border-radius: 10px;
+  background-color: grey;
+  margin: 30px;
+}
+.door:hover{
+  background: #80aaff;
 }
 #statbar1{
   background-color: red;
@@ -29,5 +44,5 @@
   background-color: blue;
   margin: 40px;
   height: 80px;
-  
+
 }
