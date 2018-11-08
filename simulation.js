@@ -3,6 +3,41 @@ var doors;//an array to hold the door values
 var firstChoiceCounter = 0;//number of times the first choice was right
 var secondChoiceCounter = 0;//number of times the second choice was right
 var numberOfInstancesCounter = 0;//total number of simulations run
+var gameState = "1stChoice";
+var prizePlace;
+
+function openDoor(playerChoice){
+  if(gameState == "1stChoice"){
+    //place the prize
+    prizePlace = Math.floor(Math.random() *3);
+    var instructions = "Great. You have chosen door number " + (playerChoice+1) +".";
+    var wrongDoor = -1;//set to negative one to signify not yet assigned
+    var secondOption;
+    //TODO make it move in a random direction to avoid predictability
+    for(var i=0;i<3;i++){
+      if(i != playerChoice && i != prizePlace){
+        wrongDoor = i;
+      }
+      //is not player's choice, is not the wrong
+      if(i != playerChoice  && i != wrongDoor ){
+        secondOption = i;
+      }
+    }
+
+    instructions += "the host has revealed that the prize was not behind door number " + (wrongDoor+1);
+    instructions += "<p>Now which door will you choose?";
+    console.log("plaerChoice: " + playerChoice + " wrongDoor: " + wrongDoor + " secondOption: + " + secondOption + "prizePlae: " + prizePlace);
+    document.getElementById("instructions").innerHTML = instructions;
+    gameState = "2ndChoice";
+  }else if(gameState == "2ndChoice"){
+    if(playerChoice == prizePlace){
+      console.log("you win!");
+    }else{
+      console.log("sorry, the prize was behind door number "+ prizePlace);
+    }
+  }
+
+}
 function ResetData(){
   firstChoiceCounter = 0;
   secondChoiceCounter = 0;
@@ -104,5 +139,6 @@ function FindSecondOption(playerChoice,doors){
       return i;
     }
   }
+
 
 }
